@@ -16,7 +16,9 @@
     return out;
   }
   const ownUnits = () => selEnts().filter(e => e.kind === 'u' && e.team === 0);
-  const costStr = c => Object.keys(c).map(k => G.RES[k].icon + ' ' + c[k]).join('  ');
+  const gy = n => '<img class="gy" src="' + R.glyph(n) + '">';
+  const costStr = c => Object.keys(c).map(k => '<span>' + gy(k) + c[k] + '</span>').join('');
+  const px = u => u.slice(0, 5) === 'data:' ? ' class="px"' : '';
 
   /* ---------- messages ---------- */
   G.msg = function (text, cls) {
@@ -144,7 +146,7 @@
     const e = sel[0], t = S.teams[0];
     if (e.team !== 0) return c;
     if (e.kind === 'b') {
-      const del = { emoji: '💥', name: 'Demolish', desc: 'Tear down this building. (Click only — no hotkey.)', nohot: true, run() { for (const b of selEnts()) if (b.kind === 'b' && b.type === e.type) G.destroy(b); } };
+      const del = { glyph: 'demolish', name: 'Demolish', desc: 'Tear down this building. (Click only. no hotkey.)', nohot: true, run() { for (const b of selEnts()) if (b.kind === 'b' && b.type === e.type) G.destroy(b); } };
       c[14] = del;
       if (!e.done) return c;
       let i = 0;
@@ -162,16 +164,16 @@
         if (d.at !== e.type || t.techs[k]) continue;
         if (d.req && t.techs[d.req] !== 2) continue;
         const lock = lockTip(d, t);
-        c[i++] = { emoji: d.ic, name: d.n, dv: d.dv, desc: d.desc, cost: d.cost, off: !!lock, why: lock,
+        c[i++] = { glyph: k, name: d.n, dv: d.dv, desc: d.desc, cost: d.cost, off: !!lock, why: lock,
           run() { if (lock || !G.queue(e, 'tech', k)) { G.sfx('error'); if (!lock) G.msg('Not enough resources.', 'warn'); } } };
       }
       if (e.type === 'tc' && t.age < 3 && !t.aging) {
         const A = G.AGES[t.age + 1];
-        c[i++] = { emoji: '🚩', name: 'Advance to ' + A.name, dv: A.dv, desc: A.years + ' — ' + A.blurb, cost: A.cost, gold: true,
+        c[i++] = { glyph: 'age', name: 'Advance to ' + A.name, dv: A.dv, desc: A.years + '. ' + A.blurb, cost: A.cost, gold: true,
           run() { if (!G.queue(e, 'age')) { G.sfx('error'); G.msg('Not enough resources to advance.', 'warn'); } } };
       }
       if (e.type === 'market') {
-        const tr = (mode, key, slot) => { c[slot] = { emoji: G.RES[key].icon, tag: mode === 'sell' ? '→🪙' : '←🪙', name: (mode === 'sell' ? 'Sell 100 ' : 'Buy 100 ') + G.RES[key].name, desc: mode === 'sell' ? 'Receive ' + (key === 's' ? 70 : 55) + ' Hon.' : 'Costs ' + (key === 's' ? 140 : 110) + ' Hon.', run() { if (!G.trade(mode, key)) G.sfx('error'); } }; };
+        const tr = (mode, key, slot) => { c[slot] = { glyph: key, tag: mode === 'sell' ? '+' + (key === 's' ? 70 : 55) : '-' + (key === 's' ? 140 : 110), name: (mode === 'sell' ? 'Sell 100 ' : 'Buy 100 ') + G.RES[key].name, desc: mode === 'sell' ? 'Receive ' + (key === 's' ? 70 : 55) + ' Hon.' : 'Costs ' + (key === 's' ? 140 : 110) + ' Hon.', run() { if (!G.trade(mode, key)) G.sfx('error'); } }; };
         tr('sell', 'f', 5); tr('sell', 'w', 6); tr('sell', 's', 7); tr('buy', 'f', 10); tr('buy', 'w', 11); tr('buy', 's', 12);
       }
       return c;
@@ -181,22 +183,22 @@
     if (allVill) {
       if (ui.menu === 'econ') {
         ['house', 'farm', 'kothar', 'vakhar', 'market', 'smith', 'temple', 'tc'].forEach((k, i) => { c[i] = buildCmd(k, t); });
-        c[14] = { emoji: '↩', name: 'Back', desc: '', run() { ui.menu = 'main'; } };
+        c[14] = { glyph: 'back', name: 'Back', desc: '', run() { ui.menu = 'main'; } };
       } else if (ui.menu === 'mil') {
         ['barracks', 'range', 'stable', 'siege', 'tower', 'wall'].forEach((k, i) => { c[i] = buildCmd(k, t); });
-        c[14] = { emoji: '↩', name: 'Back', desc: '', run() { ui.menu = 'main'; } };
+        c[14] = { glyph: 'back', name: 'Back', desc: '', run() { ui.menu = 'main'; } };
       } else {
-        c[0] = { emoji: '🏠', name: 'Build: Settlement', desc: 'Homes, farms, storehouses, market, smith and temple.', run() { ui.menu = 'econ'; } };
-        c[1] = { emoji: '🏰', name: 'Build: Military', desc: 'Talim, Paga, Tofkhana, bastions and walls.', run() { ui.menu = 'mil'; } };
+        c[0] = { glyph: 'econ', name: 'Build: Settlement', desc: 'Homes, farms, storehouses, market, smith and temple.', run() { ui.menu = 'econ'; } };
+        c[1] = { glyph: 'mil', name: 'Build: Military', desc: 'Talim, Paga, Tofkhana, bastions and walls.', run() { ui.menu = 'mil'; } };
       }
     }
     if (ui.menu === 'main') {
       if (units.some(u => u.type === 'shivaji')) {
         const cd = Math.ceil(t.abilityT - S.time);
-        c[5] = { emoji: '🚩', name: 'Har Har Mahadev!', dv: 'हर हर महादेव', desc: 'Rally cry. For 15 seconds all your troops near Maharaj gain +30% attack and +20% speed.', off: cd > 0, why: cd > 0 ? 'Ready in ' + cd + 's' : '', tag: cd > 0 ? cd + 's' : '', gold: true,
+        c[5] = { glyph: 'rally', name: 'Har Har Mahadev', dv: 'हर हर महादेव', desc: 'Rally cry. For 15 seconds all your troops near Maharaj gain +30% attack and +20% speed.', off: cd > 0, why: cd > 0 ? 'Ready in ' + cd + 's' : '', tag: cd > 0 ? cd + 's' : '', gold: true,
           run() { if (!G.heroAbility()) G.sfx('error'); } };
       }
-      c[7] = { emoji: '✋', name: 'Stop', desc: 'Halt and stand ground.', run() { G.cmd.stop(ownUnits()); } };
+      c[7] = { glyph: 'stop', name: 'Stop', desc: 'Halt and stand ground.', run() { G.cmd.stop(ownUnits()); } };
     }
     return c;
   }
@@ -204,49 +206,53 @@
   function hpHtml(e) { const f = Math.max(0, e.hp / e.maxhp); return '<div class="hp"><i style="width:' + (f * 100).toFixed(0) + '%;background:' + (f > 0.5 ? '#5fd35f' : f > 0.25 ? '#e3b23c' : '#d8442b') + '"></i><span>' + Math.ceil(e.hp) + ' / ' + e.maxhp + '</span></div>'; }
   function updatePanel() {
     const S = G.S, sel = selEnts(), t = S.teams[0];
-    let h = '';
+    let h = '', pic = '';
     if (!sel.length) {
       const A = G.AGES[t.age];
       h = '<div class="idle"><div class="nm">' + A.name + ' <span class="dv">' + A.dv + '</span></div><div class="sub">' + A.years + '</div><p>' + A.blurb + '</p></div>';
     } else if (sel.length === 1) {
       const e = sel[0], tm = S.teams[e.team], d = e.def;
       const ic = R.icon(e.kind, e.type, tm.faction);
-      h = '<div class="portrait" style="border-color:' + tm.f.c + '"><img src="' + ic + '"></div><div class="meta"><div class="nm">' + G.nameOf(e) + (e.team === 0 && d.dv ? ' <span class="dv">' + d.dv + '</span>' : '') + '</div><div class="sub" style="color:' + tm.f.c + '">' + tm.f.name + '</div>' + hpHtml(e);
+      pic = ic;
+      h = '<div class="nm">' + G.nameOf(e) + '</div><div class="sub" style="color:' + tm.f.c + '">' + (e.team === 0 && d.dv ? '<span class="dv">' + d.dv + '</span> &nbsp; ' : '') + tm.f.name + '</div>' + hpHtml(e);
       if (e.kind === 'u') {
-        h += '<div class="stats">⚔ ' + Math.round(G.atkOf(e)) + ' &nbsp; 🛡 ' + G.armorOf(e, true) + '/' + G.armorOf(e, false) + (d.range > 1 ? ' &nbsp; 🎯 ' + G.rangeOf(e) : '') + ' &nbsp; 👣 ' + d.sp.toFixed(1) + '</div>';
+        h += '<div class="stats"><span>' + gy('atk') + Math.round(G.atkOf(e)) + '</span><span>' + gy('armor') + G.armorOf(e, true) + '</span><span>' + gy('parmor') + G.armorOf(e, false) + '</span>' + (d.range > 1 ? '<span>' + gy('range') + G.rangeOf(e) + '</span>' : '') + '<span>' + gy('speed') + d.sp.toFixed(1) + '</span></div>';
         if (e.team === 0) {
           const o = e.order;
           let st = !o ? 'Idle' : o.type === 'move' ? 'Moving' : o.type === 'attack' ? 'Attacking' : o.type === 'build' ? 'Building' : o.phase === 'ret' ? 'Returning with ' + G.RES[e.ctype].name : 'Gathering ' + G.RES[G.RKEY[o.rt]].name;
-          if (e.carry >= 1) st += ' · carrying ' + Math.floor(e.carry) + ' ' + G.RES[e.ctype].icon;
-          if (e.rallyT > S.time) st += ' · 🚩 rallied'; else if (e.auraT > S.time) st += ' · inspired by Maharaj';
+          if (e.carry >= 1) st += ', carrying ' + Math.floor(e.carry) + ' ' + G.RES[e.ctype].name;
+          if (e.rallyT > S.time) st += '. Rallied!'; else if (e.auraT > S.time) st += '. Inspired by Maharaj';
           h += '<div class="extra">' + st + '</div>';
         } else h += '<div class="extra">' + d.desc + '</div>';
       } else {
-        if (d.atk) h += '<div class="stats">⚔ ' + G.atkOf(e) + ' &nbsp; 🎯 ' + d.range + '</div>';
-        if (!e.done) h += '<div class="extra">Under construction — ' + Math.floor(e.prog * 100) + '%</div>';
+        if (d.atk) h += '<div class="stats"><span>' + gy('atk') + G.atkOf(e) + '</span><span>' + gy('range') + d.range + '</span></div>';
+        if (!e.done) h += '<div class="extra">Under construction: ' + Math.floor(e.prog * 100) + '%</div>';
         else if (e.team === 0 && e.queue.length) {
           h += '<div class="queue">';
           e.queue.forEach((q, i) => {
-            const icon = q.kind === 'unit' ? '<img src="' + R.icon('u', q.key, 'swarajya') + '">' : '<span>' + (q.kind === 'tech' ? TE[q.key].ic : '🚩') + '</span>';
+            const qi = q.kind === 'unit' ? R.icon('u', q.key, 'swarajya') : '', icon = q.kind === 'unit' ? '<img' + px(qi) + ' src="' + qi + '">' : '<img class="gq" src="' + R.glyph(q.kind === 'tech' ? q.key : 'age') + '">';
             h += '<div class="q" data-q="' + i + '" title="Click to cancel">' + icon + (i === 0 ? '<i style="height:' + (100 - q.t / q.time * 100).toFixed(0) + '%"></i>' : '') + '</div>';
           });
-          h += '</div>' + (e.stalled ? '<div class="extra warn">Build more Ghar — population limit reached.</div>' : '');
+          h += '</div>' + (e.stalled ? '<div class="extra warn">Population limit reached. Build more Ghar.</div>' : '');
         } else h += '<div class="extra">' + (e.type === 'farm' && e.team === 0 ? (e.worker && G.byId(e.worker) ? 'Being tilled.' : 'Right-click with a Rayat to till this farm.') : d.desc) + '</div>';
       }
-      h += '</div>';
     } else {
       h = '<div class="multi">';
-      sel.slice(0, 36).forEach(e => { const f = e.hp / e.maxhp; h += '<div class="m" data-id="' + e.id + '"><img src="' + R.icon(e.kind, e.type, S.teams[e.team].faction) + '"><i style="width:' + (f * 100).toFixed(0) + '%;background:' + (f > 0.5 ? '#5fd35f' : f > 0.25 ? '#e3b23c' : '#d8442b') + '"></i></div>'; });
+      sel.slice(0, 36).forEach(e => { const f = e.hp / e.maxhp, mi = R.icon(e.kind, e.type, S.teams[e.team].faction); h += '<div class="m" data-id="' + e.id + '"><img' + px(mi) + ' src="' + mi + '"><i style="width:' + (f * 100).toFixed(0) + '%;background:' + (f > 0.5 ? '#5fd35f' : f > 0.25 ? '#e3b23c' : '#d8442b') + '"></i></div>'; });
       h += '</div>';
     }
-    if (h !== sigInfo) { sigInfo = h; $('info').innerHTML = h; }
+    if (pic) {                       // keep the portrait element alive so it never flickers
+      const box = $('info');
+      if (box.dataset.pic !== pic) { box.dataset.pic = pic; box.innerHTML = '<div class="portrait"><img' + px(pic) + ' src="' + pic + '"></div><div class="meta"></div>'; sigInfo = ''; }
+      if (h !== sigInfo) { sigInfo = h; box.lastElementChild.innerHTML = h; }
+    } else if (h !== sigInfo || $('info').dataset.pic) { sigInfo = h; $('info').dataset.pic = ''; $('info').innerHTML = h; }
 
     cmds = getCmds();
     let ch = '';
     cmds.forEach((c, i) => {
       if (!c) { ch += '<div class="cmd empty"></div>'; return; }
       const afford = !c.cost || G.canAfford(t, c.cost);
-      ch += '<div class="cmd' + (c.off ? ' off' : '') + (!afford ? ' poor' : '') + (c.gold ? ' gold' : '') + '" data-i="' + i + '">' + (c.icon ? '<img src="' + c.icon + '">' : '<span class="em">' + c.emoji + '</span>') + (c.tag ? '<em>' + c.tag + '</em>' : '') + (c.nohot ? '' : '<b>' + HOT[i] + '</b>') + '</div>';
+      ch += '<div class="cmd' + (c.off ? ' off' : '') + (!afford ? ' poor' : '') + (c.gold ? ' gold' : '') + '" data-i="' + i + '">' + (c.icon ? '<img' + px(c.icon) + ' src="' + c.icon + '">' : '<img class="gc" src="' + R.glyph(c.glyph) + '">') + (c.tag ? '<em>' + c.tag + '</em>' : '') + (c.nohot ? '' : '<b>' + HOT[i] + '</b>') + '</div>';
     });
     if (ch !== sigCmd) { sigCmd = ch; $('cmds').innerHTML = ch; }
 
@@ -258,8 +264,8 @@
     const sec = Math.floor(S.time);
     $('clock').textContent = ((sec / 60) | 0) + ':' + ('0' + (sec % 60)).slice(-2);
     $('idle').style.display = S.idleVill ? '' : 'none'; $('idle-n').textContent = S.idleVill;
-    let oh = '<h4>' + S.scn.title + ' · ' + S.scn.year + '</h4>';
-    for (const o of S.objectives) oh += '<div class="' + (o.done ? 'done' : '') + '">' + (o.done ? '✔' : '◆') + ' ' + o.text + '</div>';
+    let oh = '<h4>' + S.scn.title + ', ' + S.scn.year + '</h4>';
+    for (const o of S.objectives) oh += '<div class="' + (o.done ? 'done' : '') + '">' + gy(o.done ? 'ok' : 'dot') + o.text + '</div>';
     if ($('objectives').innerHTML !== oh) $('objectives').innerHTML = oh;
   }
   G.updatePanel = updatePanel;
@@ -269,7 +275,7 @@
     if (!c) { tip.style.display = 'none'; return; }
     let h = '<div class="tn">' + c.name + (c.dv ? ' <span class="dv">' + c.dv + '</span>' : '') + (c.nohot ? '' : ' <kbd>' + HOT[i] + '</kbd>') + '</div>';
     if (c.cost && Object.keys(c.cost).length) h += '<div class="tc">' + costStr(c.cost) + '</div>';
-    if (c.stats) { const d = c.stats; h += '<div class="ts">❤ ' + d.hp + ' &nbsp; ⚔ ' + d.atk + ' &nbsp; 🛡 ' + d.ar + '/' + d.pa + (d.range > 1 ? ' &nbsp; 🎯 ' + d.range : '') + '</div>'; }
+    if (c.stats) { const d = c.stats; h += '<div class="ts"><span>' + gy('hp') + d.hp + '</span><span>' + gy('atk') + d.atk + '</span><span>' + gy('armor') + d.ar + '/' + d.pa + '</span>' + (d.range > 1 ? '<span>' + gy('range') + d.range + '</span>' : '') + '</div>'; }
     if (c.desc) h += '<div class="td">' + c.desc + '</div>';
     if (c.why) h += '<div class="tw">' + c.why + '</div>';
     tip.innerHTML = h; tip.style.display = 'block';
@@ -347,7 +353,9 @@
     cv.addEventListener('wheel', e => {
       e.preventDefault();
       if (!G.S) return;
-      const c = G.cam, w = G.s2w(e.clientX, e.clientY), z = Math.max(0.5, Math.min(1.7, c.z * (e.deltaY < 0 ? 1.1 : 1 / 1.1)));
+      const c = G.cam, w = G.s2w(e.clientX, e.clientY), ZS = [0.5, 0.75, 1, 1.5, 2], now = performance.now();
+      if (now - (ui.zoomT || 0) < 140) return; ui.zoomT = now;
+      const zi = ZS.indexOf(c.z), z = ZS[Math.max(0, Math.min(ZS.length - 1, (zi < 0 ? 2 : zi) + (e.deltaY < 0 ? 1 : -1)))];
       c.z = z; c.x = (w[0] - w[1]) * G.HW - e.clientX / z; c.y = (w[0] + w[1]) * G.HH - e.clientY / z; G.clampCam();
     }, { passive: false });
 

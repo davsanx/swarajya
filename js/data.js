@@ -1,5 +1,5 @@
 'use strict';
-/* Swarajya — game data: factions, ages, units, buildings, technologies, scenarios */
+/* Swarajya game data: factions, ages, units, buildings, technologies, scenarios */
 window.G = { HW: 32, HH: 16, MAXPOP: 100, speed: 1, paused: false, muted: false };
 G.msg = function () {};
 G.sfx = function () {};
@@ -33,9 +33,9 @@ G.FACTIONS = {
 G.AGES = [
   { name: 'Jahagir Kaal', dv: 'जहागीर काळ', years: 'c. 1640',
     blurb: 'The Pune jagir, rebuilt under Rajmata Jijabai. A golden plough breaks the ruined soil.' },
-  { name: 'Swarajya Sthapana', dv: 'स्वराज्य स्थापना', years: '1645 – 1656', cost: { f: 400 }, time: 45,
+  { name: 'Swarajya Sthapana', dv: 'स्वराज्य स्थापना', years: '1645 to 1656', cost: { f: 400 }, time: 45,
     blurb: 'By tradition, the oath of Swarajya is sworn at Raireshwar. Torna and Rajgad follow.' },
-  { name: 'Gad-Kot Kaal', dv: 'गडकोट काळ', years: '1657 – 1673', cost: { f: 700, g: 250 }, time: 60,
+  { name: 'Gad-Kot Kaal', dv: 'गडकोट काळ', years: '1657 to 1673', cost: { f: 700, g: 250 }, time: 60,
     blurb: 'The age of forts. Matchlocks, cannon and heavy horse join the Mavale.' },
   { name: 'Rajyabhishek', dv: 'राज्याभिषेक', years: '1674', cost: { f: 1000, g: 700 }, time: 80,
     blurb: '6 June 1674, Raigad: the coronation. Shivaji Maharaj is Chhatrapati of a sovereign realm.' }
@@ -112,10 +112,10 @@ G.SCENARIOS = [
     map: { N: 72, seed: 1646, rock: 0.55, forest: 0.5 },
     player: { x: 15, y: 56 }, heroes: ['shivaji'], escort: 2,
     enemies: [{ faction: 'adilshahi', x: 56, y: 15, cmdr: 'qiladar', age: 0, ease: 1 }],
-    brief: ['The year is 1646. Shivaji Raje is sixteen. From the Pune jagir, among the Mavale of the Sahyadri valleys, the idea of Swarajya — a realm of one’s own — has taken root.',
-      'High above stands Torna, also called Prachandagad, held for the Sultan of Bijapur. Take it, and the garland — the toran — of Swarajya is hung.',
+    brief: ['The year is 1646. Shivaji Raje is sixteen. From the Pune jagir, among the Mavale of the Sahyadri valleys, the idea of Swarajya, a realm of one’s own, has taken root.',
+      'High above stands Torna, also called Prachandagad, held for the Sultan of Bijapur. Take it, and the garland, the toran, of Swarajya is hung.',
       'History records that Torna changed hands with barely a blow struck. Here, you will have to earn it: raise a settlement, train your Mavale, and bring down the Adilshahi Qila.'],
-    win: 'Torna is yours. Treasure found within its walls will raise a new capital on the next hill — Rajgad. The toran of Swarajya has been tied.' },
+    win: 'Torna is yours. Treasure found within its walls will raise a new capital on the next hill: Rajgad. The toran of Swarajya has been tied.' },
   { id: 'pratapgad', title: 'Pratapgad', sub: 'The Tiger’s Claws', dv: 'प्रतापगड', year: '1659', foe: 'Adilshahi',
     map: { N: 80, seed: 1659, rock: 0.5, forest: 0.9, coast: true },
     player: { x: 61, y: 61 }, heroes: ['shivaji'], escort: 4, age: 1,
@@ -131,15 +131,15 @@ G.SCENARIOS = [
     brief: ['February 1670. By the Treaty of Purandar, Kondhana and twenty-two other forts were surrendered to the Mughal Empire. Now Maharaj is taking them back.',
       'Kondhana towers over Pune, held by the Rajput qiladar Udaybhan Rathod. Tanaji Malusare set aside his own son’s wedding to lead the assault, scaling the sheer cliff by night with his Mavale.',
       'Tanaji fights at your side. His blows fall hardest upon fortifications. Break into the Mughal Qila and defeat Udaybhan.'],
-    win: 'Kondhana is taken — but Tanaji Malusare fell in the hour of victory. “Gad ala, pan Sinha gela,” said Maharaj: the fort is won, but the lion is gone. The fort is called Sinhagad ever after.' },
+    win: 'Kondhana is taken, but Tanaji Malusare fell in the hour of victory. “Gad ala, pan Sinha gela,” said Maharaj: the fort is won, but the lion is gone. The fort is called Sinhagad ever after.' },
   { id: 'raigad', title: 'Raigad', sub: 'Between Two Empires', dv: 'राज्याभिषेक', year: '1674', foe: 'Mughal & Adilshahi',
     map: { N: 92, seed: 1674, rock: 0.55, forest: 0.55, coast: true },
     player: { x: 46, y: 46 }, heroes: ['shivaji'], escort: 4, age: 1, res: { f: 400, w: 400, g: 250, s: 250 },
     enemies: [{ faction: 'mughal', x: 16, y: 16, cmdr: 'subahdar', age: 1, ease: 0 }, { faction: 'adilshahi', x: 75, y: 75, cmdr: 'sardar', age: 1, ease: 0 }],
-    brief: ['The Swarajya now stretches from the Sahyadri to the sea — and stands between two great powers. To the north, the Mughal subah of the Deccan. To the south, the Sultanate of Bijapur.',
+    brief: ['The Swarajya now stretches from the Sahyadri to the sea, and stands between two great powers. To the north, the Mughal subah of the Deccan. To the south, the Sultanate of Bijapur.',
       'At Raigad, the capital, preparations are under way for a coronation that will declare a sovereign Maratha state. Neither empire means to let that day arrive.',
       'Hold the centre against both. Advance to the age of Rajyabhishek if you can, and destroy both enemy strongholds.'],
-    win: '6 June 1674. On the summit of Raigad, Shivaji Maharaj is crowned Chhatrapati. A new era — the Rajyabhishek Shaka — begins.' },
+    win: '6 June 1674. On the summit of Raigad, Shivaji Maharaj is crowned Chhatrapati. A new era, the Rajyabhishek Shaka, begins.' },
   { id: 'skirmish', title: 'Sahyadri', sub: 'Open Skirmish', dv: 'सह्याद्री', year: 'Random map', foe: 'Mughal',
     map: { N: 84, seed: 0, rock: 0.55, forest: 0.6 },
     player: { x: 17, y: 66 }, heroes: ['shivaji'], escort: 2,

@@ -193,7 +193,7 @@
         if (tg) {
           G.cmd.move(ready, tg.x, tg.y, true);
           a.wave = Math.min(a.wave + a.inc, a.army); a.nextWave = S.time + a.gap;
-          G.msg(t.f.short + ' war drums sound — an attack is on the march!', 'warn'); G.sfx('alert');
+          G.msg(t.f.short + ' war drums sound. An attack is on the march!', 'warn'); G.sfx('alert');
         }
       }
     }

@@ -659,7 +659,7 @@
     t.abilityT = S.time + 90;
     for (const u of S.ents) if (u.kind === 'u' && !u.dead && u.team === 0 && Math.hypot(u.x - sh.x, u.y - sh.y) < 10) u.rallyT = S.time + 15;
     S.fx.push({ k: 'ring', x: sh.x, y: sh.y, t: 0, d: 1.2, r: 10, c: '#ffb347' });
-    G.msg('“Har Har Mahadev!” — your troops surge forward.', 'age'); G.sfx('horn');
+    G.msg('Har Har Mahadev! Your troops surge forward.', 'age'); G.sfx('horn');
     return true;
   };
   G.destroy = function (e) { if (e && !e.dead && e.team === 0 && !e.def.hero) kill(e, null); };
