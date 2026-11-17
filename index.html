@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Swarajya — स्वराज्य</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<canvas id="game"></canvas>
+
+<div id="hud" class="hidden">
+  <div id="topbar">
+    <div class="res" title="Dhanya — food">🌾 <b id="r-f">0</b><small>Dhanya</small></div>
+    <div class="res" title="Lakud — wood">🪵 <b id="r-w">0</b><small>Lakud</small></div>
+    <div class="res" title="Hon — gold coin of the Swarajya">🪙 <b id="r-g">0</b><small>Hon</small></div>
+    <div class="res" title="Dagad — stone">🪨 <b id="r-s">0</b><small>Dagad</small></div>
+    <div class="res" title="Population">👥 <b id="r-pop">0</b><small>Rayat</small></div>
+    <div id="idle" class="res btn" title="Idle Rayat — click or press .">💤 <b id="idle-n">0</b><small>idle</small></div>
+    <div id="agebox"><span id="age-dv"></span><span id="age-en"></span></div>
+    <div class="spacer"></div>
+    <div id="clock">0:00</div>
+    <button id="btn-speed" title="Game speed">1×</button>
+    <button id="btn-snd" title="Sound">🔊</button>
+    <button id="btn-menu" title="Menu (P)">☰</button>
+  </div>
+  <div id="objectives"></div>
+  <div id="msgs"></div>
+  <div id="bottom">
+    <div id="mini-wrap"><canvas id="mini" width="560" height="280"></canvas></div>
+    <div id="info"></div>
+    <div id="cmds"></div>
+  </div>
+  <div id="tip"></div>
+</div>
+
+<div id="menu">
+  <div class="menu-inner">
+    <div class="crest">
+      <div class="dv-title">स्वराज्य</div>
+      <h1>SWARAJYA</h1>
+      <div class="tag">A real-time strategy of the Maratha rise · 1646 – 1674</div>
+      <div class="seal">“हे राज्य व्हावे हे श्रींची इच्छा”</div>
+    </div>
+    <div id="scn-list"></div>
+    <div class="row">
+      <div id="diff"></div>
+      <button id="btn-start" class="big">Begin campaign</button>
+    </div>
+    <details class="how">
+      <summary>How to play</summary>
+      <div class="cols">
+        <div><b>Mouse</b><br>Left-click / drag — select<br>Double-click — select all of a type<br>Right-click — move, gather, build, attack, set rally<br>Wheel — zoom · Screen edge / arrows — scroll</div>
+        <div><b>Keys</b><br>Q W E R T · A S D F G · Z X C V B — command card<br>H — Rajwada · M — Maharaj · . — idle Rayat<br>Ctrl/Alt + 1–9 — set group · 1–9 — recall<br>Space — centre · Esc — cancel · P — pause</div>
+        <div><b>Basics</b><br>Rayat gather Dhanya, Lakud, Hon and Dagad.<br>Build Ghar for population, a Talim for Mavale.<br>Advance the age at the Rajwada to unlock more.<br>Destroy the enemy Qila and defeat its commander.</div>
+      </div>
+    </details>
+  </div>
+</div>
+
+<div id="modal" class="hidden"></div>
+
+<script src="js/data.js"></script>
+<script src="js/map.js"></script>
+<script src="js/sim.js"></script>
+<script src="js/ai.js"></script>
+<script src="js/render.js"></script>
+<script src="js/ui.js"></script>
+<script src="js/main.js"></script>
+</body>
+</html>
